@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 
 url=$1
 
@@ -16,11 +16,14 @@ case ${answer:0:1} in
 		y|Y )
 				websites=$(<./results.txt)
 				for line in $websites; do
-					echo "$line"
-					nc -zv -w 1 $line 80 2>&1 | grep -i "open"
-					nc -zv -w 1 $line 443 2>&1 | grep -i "open"
-					echo -e "\n"
-				done
+					#echo "$line"
+					if [[ "$(nc -zv -w 1 $line 80 2>&1 | grep open)" == *"open"* ]]; then
+						echo $line port 80/open;
+					fi
+					if [[ "$(nc -zv -w 1 $line 443 2>&1 | grep open)" == *"open"* ]]; then
+						echo $line port 443/open;
+					fi
+			done
 		;;
 		* )
 				echo "bye"
